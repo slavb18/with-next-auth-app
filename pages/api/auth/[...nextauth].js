@@ -1,5 +1,7 @@
 import NextAuth from 'next-auth'
 import Providers from 'next-auth/providers'
+const Photos = require('googlephotos');
+Photos.Scopes.READ_ONLY
 
 const options = {
   // @link https://next-auth.js.org/configuration/providers
@@ -15,6 +17,9 @@ const options = {
     Providers.Google({
       clientId: process.env.NEXTAUTH_GOOGLE_ID,
       clientSecret: process.env.NEXTAUTH_GOOGLE_SECRET,
+      authorizationUrl: 'https://accounts.google.com/o/oauth2/v2/auth?prompt=consent&access_type=offline&response_type=code',
+      scope: 'https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/photoslibrary',
+    // scope: 'https://www.googleapis.com/auth/photoslibrary.readonly'
     }),
     Providers.Facebook({
       clientId: process.env.NEXTAUTH_FACEBOOK_ID,
@@ -84,6 +89,7 @@ const options = {
      * @return {object}              Session that will be returned to the client
      */
     session: async (session, user) => {
+      //console.log(session)
       //session.customSessionProperty = 'bar'
       return Promise.resolve(session)
     },
